@@ -77,7 +77,6 @@ dishRouter.route('/:dishId')
       new: true
     })
       .then((dish) => {
-        console.log('Dish Created , ', dish);
         res.statusCode = 200,
           res.setHeader('Content-Type', 'application/json');
         res.json(dish);
