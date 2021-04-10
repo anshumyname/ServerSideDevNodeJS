@@ -1,5 +1,6 @@
 const express = require('express');
 const leaderRouter = express.Router();
+var authenticate = require('../authenticate'); 
 
 const Leaders = require('../model/leaders');
 
@@ -17,7 +18,7 @@ leaderRouter.route('/')
       .catch((err) => next(err));
   })
 
-  .post((req, res, next) => {
+  .post(authenticate.verifyUser, (req, res, next) => {
     Leaders.create(req.body)
       .then((leader) => {
         console.log('Leader Created , ', leader);
@@ -29,12 +30,12 @@ leaderRouter.route('/')
       .catch((err) => next(err));
   })
 
-  .put((req, res, next) => {
+  .put(authenticate.verifyUser, (req, res, next) => {
     res.statusCode = 403;
     res.end('PuT operation not operation on /leaders')
   })
 
-  .delete((req, res, next) => {
+  .delete(authenticate.verifyUser, (req, res, next) => {
     Leaders.remove({})
       .then((resp) => {
         res.statusCode = 200,

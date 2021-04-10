@@ -1,4 +1,5 @@
 const express = require('express');
+var authenticate = require('../authenticate');
 const promoRouter = express.Router();
 
 const Promotions = require('../model/promotions');
@@ -16,7 +17,7 @@ promoRouter.route('/')
       .catch((err) => next(err));
   })
 
-  .post((req, res, next) => {
+  .post(authenticate.verifyUser, (req, res, next) => {
     Promotions.create(req.body)
       .then((promo) => {
         console.log('Promo Created , ', promo);
@@ -28,12 +29,12 @@ promoRouter.route('/')
       .catch((err) => next(err));
   })
 
-  .put((req, res, next) => {
+  .put(authenticate.verifyUser, (req, res, next) => {
     res.statusCode = 403;
     res.end('PuT operation not operation on /promotions')
   })
 
-  .delete((req, res, next) => {
+  .delete(authenticate.verifyUser, (req, res, next) => {
     Promotions.remove({})
       .then((resp) => {
         res.statusCode = 200,
