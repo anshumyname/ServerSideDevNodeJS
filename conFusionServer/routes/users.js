@@ -7,8 +7,15 @@ var User = require('../model/user');
 var authenticate = require('../authenticate');
 var router = express.Router();
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.send('respond with a resource');
+router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, function (req, res, next) {
+      User.find({})
+      .then((users) => {
+        res.statusCode = 200,
+        res.setHeader('Content-Type', 'application/json');
+        res.json(users);
+      }, (err) => next(err))
+
+      .catch((err) => next(err));
 });
 
 router.post('/signup', (req, res, next) => {
@@ -23,7 +30,7 @@ router.post('/signup', (req, res, next) => {
         if (req.body.firstname) {
           user.firstname = req.body.firstname;
         }
-        if (req.body.lasttname) {
+        if (req.body.lastname) {
           user.lastname = req.body.lastname;
         }
         user.save((err, user) => {
